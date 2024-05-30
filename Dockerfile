@@ -1,14 +1,7 @@
-FROM python AS builder
+FROM python:3.11.2-alpine3.16 AS builder
 
-WORKDIR /app
-
-COPY requirements /app/requirements
-RUN python -m venv /app/.venv
-RUN pip install -r requirements/backend.in
-
-FROM python
-COPY --from=builder /app/.venv /app/.venv
-COPY build build
-COPY spaceship spaceship
-
-EXPOSE 8080
+RUN apk update
+RUN apk --no-cache add musl-dev g++
+COPY requirements requirements
+RUN python -m venv /.venv
+ENV PATH="/.venv/bin:$PATH"
